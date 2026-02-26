@@ -25,6 +25,21 @@ header {
     border-bottom: 1px solid #ccc;
     padding: 0.5rem 0;
 }
+/* layout for movie item */
+#itemList li .media {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+#itemList li img {
+    width: 100px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
+}
+#itemList li .meta {
+    line-height: 1.2;
+}
 footer {
     background: #222;
     color: #ccc;

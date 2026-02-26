@@ -1,21 +1,34 @@
-// configuration: using requested API key and single movie
-// base URL is http://www.omdbapi.com/?i=tt3896198&apikey=27a85546
+// API key provided by user
 const apiKey = "27a85546";
 
-
-// items will be populated asynchronously from the OMDB API
-let items = []; // { name, date, posterId }
+// items will be populated by search results from OMDB
+let items = []; // { name, year, poster, imdbID }
 
 const itemList = document.getElementById("itemList");
 const sortSelect = document.getElementById("sortSelect");
+const searchForm = document.getElementById("searchForm");
+const searchInput = document.getElementById("searchInput");
 
 function renderList(sortedItems) {
     itemList.innerHTML = "";
+    if (!sortedItems.length) {
+        const p = document.createElement('p');
+        p.textContent = 'No results. Try searching for a movie title.';
+        itemList.appendChild(p);
+        return;
+    }
+
     sortedItems.forEach(item => {
         const li = document.createElement("li");
+        const posterSrc = item.poster && item.poster !== 'N/A' ? item.poster : 'https://via.placeholder.com/100x150?text=No+Poster';
         li.innerHTML = `
-            <strong>${item.name}</strong> (${item.date.getFullYear()})<br />
-            <img src="http://img.omdbapi.com/?apikey=${apiKey}&i=${item.posterId}" alt="${item.name} poster" width="100" />
+            <div class="media">
+                <img src="${posterSrc}" alt="${item.name} poster" />
+                <div class="meta">
+                    <strong>${item.name}</strong><br />
+                    <span class="year">${item.year || ''}</span>
+                </div>
+            </div>
         `;
         itemList.appendChild(li);
     });
@@ -31,10 +44,10 @@ function sortItems(criteria) {
             sorted.sort((a, b) => b.name.localeCompare(a.name));
             break;
         case "newest":
-            sorted.sort((a, b) => b.date - a.date);
+            sorted.sort((a, b) => (b.year || 0) - (a.year || 0));
             break;
         case "oldest":
-            sorted.sort((a, b) => a.date - b.date);
+            sorted.sort((a, b) => (a.year || 0) - (b.year || 0));
             break;
         default:
             break;
@@ -42,32 +55,36 @@ function sortItems(criteria) {
     return sorted;
 }
 
-sortSelect.addEventListener("change", (e) => {
-    const criteria = e.target.value;
-    const sorted = sortItems(criteria);
-    renderList(sorted);
+sortSelect.addEventListener("change", () => {
+    renderList(sortItems(sortSelect.value));
 });
 
-// fetch the movie data and render once we have it
-// using the same pattern but the API key and ID come from the above constants
-async function fetchMovies() {
-    const promises = movieIds.map(id =>
-        fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=${id}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.Response === "True") {
-                    items.push({
-                        name: data.Title,
-                        date: new Date(`${data.Year}`),
-                        posterId: data.imdbID
-                    });
-                }
-            })
-            .catch(err => console.error("OMDB fetch error", err))
-    );
+searchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = searchInput.value.trim();
+    if (!q) return;
+    performSearch(q);
+});
 
-    await Promise.all(promises);
-    renderList(sortItems(sortSelect.value));
+async function performSearch(query) {
+    try {
+        const url = `https://www.omdbapi.com/?apikey=${apiKey}&s=${encodeURIComponent(query)}&type=movie`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.Response === 'True' && Array.isArray(data.Search)) {
+            items = data.Search.map(r => ({
+                name: r.Title,
+                year: parseInt((r.Year || '').slice(0,4)) || 0,
+                poster: r.Poster,
+                imdbID: r.imdbID
+            }));
+        } else {
+            items = [];
+        }
+        renderList(sortItems(sortSelect.value));
+    } catch (err) {
+        console.error('Search error', err);
+        items = [];
+        renderList(items);
+    }
 }
-
-fetchMovies();
