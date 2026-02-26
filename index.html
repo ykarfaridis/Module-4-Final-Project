@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module 4 Final Project - Movie Sorter</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header>
+        <h1>Movie List</h1>
+    </header>
+
+    <section id="controls">
+        <label for="sortSelect">Sort by:</label>
+        <select id="sortSelect">
+            <option value="az">Alphabetical A &#x2192; Z</option>
+            <option value="za">Alphabetical Z &#x2192; A</option>
+            <option value="newest">Newest to Oldest</option>
+            <option value="oldest">Oldest to Newest</option>
+        </select>
+    </section>
+
+    <section id="content">
+        <ul id="itemList">
+            <!-- Items will be injected by script -->
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Module 4 Final Project</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
