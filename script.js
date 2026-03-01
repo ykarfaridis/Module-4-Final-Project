@@ -59,6 +59,36 @@ sortSelect.addEventListener("change", () => {
     renderList(sortItems(sortSelect.value));
 });
 
+// Theme detection based on search query
+function detectTheme(query) {
+    const lowerQuery = query.toLowerCase();
+    
+    // Define theme keywords
+    const themes = {
+        'horror': ['horror', 'haunted', 'psycho', 'scream', 'nightmare', 'evil', 'dead', 'saw', 'insidious', 'conjuring'],
+        'romance': ['love', 'romance', 'wedding', 'romance', 'heart', 'passion', 'kiss', 'bride', 'groom', 'romantic'],
+        'adventure': ['adventure', 'hero', 'marvel', 'super', 'avengers', 'action', 'mission', 'quest', 'treasure', 'explorer'],
+        'cool': ['frozen', 'ice', 'snow', 'winter', 'elsa', 'cold', 'arctic', 'freeze'],
+        'scifi': ['star', 'force', 'jedi', 'space', 'trek', 'alien', 'robot', 'terminator', 'blade runner', 'avatar'],
+        'dark': ['dark', 'batman', 'noir', 'thriller', 'dracul', 'vampire', 'shadow', 'midnight', 'cryptnight', 'silence']
+    };
+    
+    // Check which theme matches
+    for (const [theme, keywords] of Object.entries(themes)) {
+        if (keywords.some(keyword => lowerQuery.includes(keyword))) {
+            return `theme-${theme}`;
+        }
+    }
+    
+    // Default to tech theme
+    return 'theme-tech';
+}
+
+// Apply theme to page
+function applyTheme(themeName) {
+    document.body.className = themeName;
+}
+
 searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const q = searchInput.value.trim();
@@ -68,6 +98,10 @@ searchForm.addEventListener('submit', (e) => {
 
 async function performSearch(query) {
     try {
+        // Apply theme based on search query
+        const theme = detectTheme(query);
+        applyTheme(theme);
+        
         const url = `https://www.omdbapi.com/?apikey=${apiKey}&s=${encodeURIComponent(query)}&type=movie`;
         const res = await fetch(url);
         const data = await res.json();
