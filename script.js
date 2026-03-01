@@ -88,3 +88,6 @@ async function performSearch(query) {
         renderList(items);
     }
 }
+
+// Load search results for "The Matrix" by default
+performSearch("The Matrix");
