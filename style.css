@@ -238,6 +238,9 @@ footer .logo {
     header .logo {
         width: 40px;
     }
+    header h1 {
+        font-size: 1.4rem;
+    }
     #controls {
         display: flex;
         flex-direction: column;
@@ -254,13 +257,41 @@ footer .logo {
     #controls button {
         width: 100%;
         box-sizing: border-box;
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
     }
     #itemList {
         grid-template-columns: 1fr;
+    }
+    #itemList li img {
+        max-width: 200px;
     }
     footer {
         flex-direction: column;
         gap: 0.5rem;
     }
 }
+
+/* extra small devices */
+@media (max-width: 400px) {
+    body {
+        font-size: 0.9rem;
+    }
+    header h1 {
+        font-size: 1.2rem;
+    }
+    #controls input,
+    #controls select,
+    #controls button {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+    }
+    #itemList li img {
+        max-width: 150px;
+    }
+    #content {
+        background-attachment: scroll;
+    }
+}
+
 
