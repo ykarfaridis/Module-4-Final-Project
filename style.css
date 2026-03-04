@@ -217,3 +217,50 @@ footer .logo {
     width: 50px;
     height: auto;
 }
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    #itemList {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    #itemList li img {
+        width: 100%;
+        max-width: 250px;
+        height: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    header .logo {
+        width: 40px;
+    }
+    #controls {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    #controls form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    #controls input,
+    #controls select,
+    #controls button {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    #itemList {
+        grid-template-columns: 1fr;
+    }
+    footer {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
